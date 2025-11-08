@@ -29,12 +29,15 @@ class UnitResource extends Resource
                 Forms\Components\Section::make([
                     Forms\Components\TextInput::make('name')
                         ->required()
+                        ->placeholder("e.g Kilogram, Picies")
                         ->maxLength(255),
                     Forms\Components\TextInput::make('abbreviation')
                         ->required()
+                        ->placeholder("e.g Kg, Pcs")
                         ->maxLength(255),
                     Forms\Components\Textarea::make('description')
                         ->rows(5)
+                        ->placeholder("Unit description")
                         ->maxLength(255)
                         ->columnSpanFull(),
                 ])->columns(["sm" => 2])->columnSpan(2),
@@ -75,7 +78,7 @@ class UnitResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->emptyStateIcon('heroicon-o-scale')
-            ->emptyStateDescription('Create user and detail data.')
+            ->emptyStateDescription('Create unit and detail data.')
             ->emptyStateActions([
                 Action::make('create')
                     ->label('Create units')
