@@ -10,7 +10,8 @@ return new class extends Migration
     {
         Schema::create('units', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // Pcs, Reel, Kg, Pallet
+            $table->string('name'); // Picies, Reel, Kg, Pallet
+            $table->string('abbreviation'); // Pcs, Reel, Kg, Pallet
             $table->string('description')->nullable();
             $table->softDeletes();
             $table->timestamps();
