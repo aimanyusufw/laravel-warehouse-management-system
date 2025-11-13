@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -12,34 +10,37 @@ class Inventory extends Model
 {
     use HasFactory, SoftDeletes;
 
-    // Non-fillable because filled automatically
-    protected $guarded = [
-        'id',
-        'item_id',
+    protected $fillable = [
+        'product_id',
         'location_id',
-        'received_at' // Filled when recived 
+        'batch_number',
+        'quantity',
+        'expiration_date',
+        'pallet_id'
     ];
 
     protected $casts = [
-        'quantity' => 'decimal:4',
-        'reserved_qty' => 'decimal:4',
-        'received_at' => 'datetime',
-        'last_counted_at' => 'datetime',
+        'expiration_date' => 'date',
+        'quantity' => 'integer',
     ];
 
-    // Relations   
-    public function item(): BelongsTo
+    public function product()
     {
-        return $this->belongsTo(Item::class);
+        return $this->belongsTo(Product::class);
     }
 
-    public function location(): BelongsTo
+    public function location()
     {
         return $this->belongsTo(Location::class);
     }
 
-    public function qcApprovals(): HasMany
+    public function movements()
     {
-        return $this->hasMany(QcApproval::class);
+        return $this->hasMany(StockMovement::class);
+    }
+
+    public function waveDetails()
+    {
+        return $this->hasMany(WaveDetail::class);
     }
 }

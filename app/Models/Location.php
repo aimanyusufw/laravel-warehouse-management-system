@@ -12,31 +12,17 @@ class Location extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'code',
         'name',
         'type',
-        'is_active',
         'capacity',
+        'qr_code_path',
+        'aisle',
+        'rack',
+        'level'
     ];
 
-    protected $casts = [
-        'is_active' => 'boolean',
-        'capacity' => 'decimal:2',
-    ];
-
-    // Relations
-    public function inventory(): HasMany
+    public function inventories()
     {
         return $this->hasMany(Inventory::class);
-    }
-
-    public function grDetailsPutaway(): HasMany
-    {
-        return $this->hasMany(GrDetail::class, 'putaway_location_id');
-    }
-
-    public function giDetailsPicking(): HasMany
-    {
-        return $this->hasMany(GiDetail::class, 'picking_location_id');
     }
 }

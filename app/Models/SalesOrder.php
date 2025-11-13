@@ -13,21 +13,36 @@ class SalesOrder extends Model
 
     protected $fillable = [
         'so_number',
-        'customer_name',
-        'date',
+        'customer_id',
         'status',
-        'shipping_address',
-        'due_date',
+        'order_date',
+        'shipping_carrier_id',
+        'shipping_cost',
+        'tracking_number'
     ];
 
     protected $casts = [
-        'date' => 'date',
-        'due_date' => 'date',
+        'order_date' => 'date',
+        'shipping_cost' => 'decimal:2',
     ];
 
-    // Relations
-    public function goodsIssues(): HasMany
+    public function customer()
     {
-        return $this->hasMany(GoodsIssue::class, 'so_id');
+        return $this->belongsTo(Customer::class);
+    }
+
+    public function carrier()
+    {
+        return $this->belongsTo(ShippingCarrier::class, 'shipping_carrier_id');
+    }
+
+    public function details()
+    {
+        return $this->hasMany(OrderDetail::class, 'order_id');
+    }
+
+    public function shipments()
+    {
+        return $this->hasMany(Shipment::class);
     }
 }

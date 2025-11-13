@@ -15,28 +15,20 @@ class Product extends Model
     protected $fillable = [
         'sku',
         'name',
-        'description',
-        'lead_time',
+        'unit',
+        'min_stock',
+        'retail_price',
+        'weight',
+        'qr_code_path'
     ];
 
-    // Relations
-    public function unit(): BelongsTo
-    {
-        return $this->belongsTo(Unit::class);
-    }
+    protected $casts = [
+        'retail_price' => 'decimal:2',
+        'weight' => 'decimal:3',
+    ];
 
-    public function workOrders(): HasMany
+    public function inventories()
     {
-        return $this->hasMany(WorkOrder::class);
-    }
-
-    public function billOfMaterials(): HasMany
-    {
-        return $this->hasMany(BillOfMaterial::class);
-    }
-
-    public function giDetails(): HasMany
-    {
-        return $this->hasMany(GiDetail::class);
+        return $this->hasMany(Inventory::class);
     }
 }
