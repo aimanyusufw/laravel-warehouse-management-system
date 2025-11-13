@@ -28,7 +28,7 @@ class DashboardPanelProvider extends PanelProvider
             ->id('dashboard')
             ->path('')
             ->login()
-            ->brandName("Inventory Management")
+            ->brandName("maxWMS")
             ->colors([
                 'primary' => Color::Emerald,
             ])
