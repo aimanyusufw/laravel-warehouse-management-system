@@ -6,20 +6,23 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    public function up(): void
     {
         Schema::create('locations', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique();
-            $table->string('name');
-            $table->string('type'); // RM_STORAGE, FG_STORAGE, QA_QUARANTINE, STAGING, MRO
-            $table->boolean('is_active')->default(true);
-            $table->decimal('capacity')->nullable();
-            $table->softDeletes();
+            $table->string('name')->unique();
+            $table->enum('type', ['Picking', 'Bulk', 'QC', 'Staging'])->default('Picking');
+            $table->integer('capacity')->nullable();
+            $table->string('qr_code_path')->nullable();
+            $table->string('aisle')->nullable();
+            $table->string('rack')->nullable();
+            $table->integer('level')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
-    public function down()
+
+    public function down(): void
     {
         Schema::dropIfExists('locations');
     }

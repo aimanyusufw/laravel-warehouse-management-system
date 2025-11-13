@@ -12,11 +12,13 @@ return new class extends Migration
             $table->id();
             $table->string('sku')->unique();
             $table->string('name');
-            $table->foreignId('unit_id')->constrained('units'); // Referensi ke units
-            $table->text('description')->nullable();
-            $table->integer('lead_time')->nullable();
-            $table->softDeletes();
+            $table->string('unit')->default('Pcs');
+            $table->integer('min_stock')->default(0);
+            $table->decimal('retail_price', 10, 2);
+            $table->decimal('weight', 8, 3); // Berat dalam KG (akurasi 3 desimal)
+            $table->string('qr_code_path')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
     public function down()

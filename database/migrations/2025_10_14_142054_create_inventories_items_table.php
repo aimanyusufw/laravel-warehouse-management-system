@@ -8,40 +8,22 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('items', function (Blueprint $table) {
+        Schema::create('inventories', function (Blueprint $table) {
             $table->id();
-            $table->string('part_number')->unique();
-            $table->string('name');
-            $table->foreignId('unit_id')->constrained('units'); // Referensi ke units
-            $table->boolean('is_injection_part')->default(false); // Komponen dari proses injection
-            $table->boolean('is_raw_material')->default(true); // Material dibeli
-            $table->decimal('safety_stock')->nullable();
-            $table->text('notes')->nullable();
-            $table->softDeletes();
-            $table->timestamps();
-        });
-
-        Schema::create('inventory', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('item_id')->constrained('items');
+            $table->foreignId('product_id')->constrained('products');
             $table->foreignId('location_id')->constrained('locations');
-            $table->decimal('quantity', 15, 4);
-            $table->string('lot_number');
-            $table->string('date_code')->nullable();
-            $table->string('msl_level')->nullable();
-            $table->string('status')->default('QUARANTINE'); // QUARANTINE, AVAILABLE, RESERVED
-
-            $table->decimal('reserved_qty', 15, 4)->default(0); // Stok yang dialokasikan untuk WO
-            $table->timestamp('received_at');
-            $table->timestamp('last_counted_at')->nullable();
-            $table->unique(['item_id', 'location_id', 'lot_number']);
-            $table->softDeletes();
+            $table->string('batch_number');
+            $table->integer('quantity');
+            $table->date('expiration_date')->nullable();
+            $table->string('pallet_id')->unique(); // Kunci untuk QR Code
             $table->timestamps();
+            $table->softDeletes();
+
+            $table->unique(['product_id', 'batch_number', 'location_id']);
         });
     }
     public function down()
     {
-        Schema::dropIfExists('items');
-        Schema::dropIfExists('inventory');
+        Schema::dropIfExists('inventories');
     }
 };
