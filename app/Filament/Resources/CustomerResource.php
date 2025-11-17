@@ -90,26 +90,49 @@ class CustomerResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
+                    ->label('Company Name')
+                    ->searchable()
+                    ->placeholder('No company name'),
+
                 Tables\Columns\TextColumn::make('contact_person')
-                    ->searchable(),
+                    ->label('Contact Person')
+                    ->searchable()
+                    ->placeholder('No contact person'),
+
                 PhoneColumn::make('phone')
-                    ->displayFormat(PhoneInputNumberType::INTERNATIONAL),
-                CountryColumn::make('country'),
+                    ->displayFormat(PhoneInputNumberType::INTERNATIONAL)
+                    ->placeholder('No phone number'),
+
+                CountryColumn::make('country')
+                    ->label('Country')
+                    ->placeholder('No country selected'),
+
                 Tables\Columns\TextColumn::make('email')
-                    ->searchable(),
+                    ->label('Email')
+                    ->searchable()
+                    ->placeholder('No email'),
+
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('Created At')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->placeholder('Not set'),
+
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Updated At')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->placeholder('Not updated'),
+
                 Tables\Columns\TextColumn::make('deleted_at')
+                    ->label('Deleted At')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->placeholder('Active'),
+
             ])
             ->emptyStateIcon('heroicon-o-users')
             ->emptyStateDescription('Create customers and detail data.')
