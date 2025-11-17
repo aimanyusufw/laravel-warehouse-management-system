@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users');
             $table->integer('quantity');
             $table->enum('type', ['IN', 'OUT', 'ADJUST', 'TRANSFER']);
-            $table->foreignId('source_location_id')->nullable()->constrained('locations');
-            $table->foreignId('destination_location_id')->nullable()->constrained('locations');
+            $table->foreignUuid('source_location_id')->nullable()->constrained('locations');
+            $table->foreignUuid('destination_location_id')->nullable()->constrained('locations');
             $table->timestamps();
         });
     }

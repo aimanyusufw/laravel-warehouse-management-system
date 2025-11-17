@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('inventories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained('products');
-            $table->foreignId('location_id')->constrained('locations');
+            $table->foreignUuid('location_id')->constrained('locations');
             $table->string('batch_number');
             $table->integer('quantity');
             $table->date('expiration_date')->nullable();
