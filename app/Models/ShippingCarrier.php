@@ -12,6 +12,12 @@ class ShippingCarrier extends Model
 
     protected $fillable = [
         'name',
+        "service_name",
+        "integration_endpoint",
+        "cut_off_time",
+        "base_rate",
+        "min_weight",
+        "max_weight",
         'api_key',
         'is_active'
     ];
