@@ -10,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -162,6 +163,13 @@ class LocationResource extends Resource
                     ->url(LocationResource::getUrl('create'))
                     ->icon('heroicon-m-plus')
                     ->button(),
+            ])
+            ->actions([
+                Action::make('print_qr')
+                    ->label('Print')
+                    ->icon('heroicon-o-printer')
+                    ->url(fn($record) => route('location.print', $record))
+                    ->openUrlInNewTab()
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make()
