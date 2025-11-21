@@ -104,15 +104,17 @@ class ProductResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('unit')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('min_stock')
                     ->numeric()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('unit')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('retail_price')
                     ->numeric()
+                    ->prefix("IDR ")
                     ->sortable(),
                 Tables\Columns\TextColumn::make('weight')
+                    ->suffix(" Kg")
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
