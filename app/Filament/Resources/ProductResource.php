@@ -139,6 +139,13 @@ class ProductResource extends Resource
                     ->icon('heroicon-m-plus')
                     ->button(),
             ])
+            ->actions([
+                Action::make('print_qr')
+                    ->label('Print')
+                    ->icon('heroicon-o-printer')
+                    ->url(fn($record) => route('product.print', $record))
+                    ->openUrlInNewTab()
+            ])
             ->filters([
                 Tables\Filters\TrashedFilter::make()
             ])
