@@ -21,6 +21,17 @@ class SalesOrder extends Model
         'tracking_number'
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->so_number)) {
+                $model->so_number = 'SO-' . date('Ymd') . '-' . str_pad(SalesOrder::max('id') + 1, 5, '0', STR_PAD_LEFT);
+            }
+        });
+    }
+
     protected $casts = [
         'order_date' => 'date',
         'shipping_cost' => 'decimal:2',
