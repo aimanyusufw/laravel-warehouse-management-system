@@ -73,7 +73,8 @@ class ProductionReceiptResource extends Resource
                                         ->default('Pending')
                                         ->required()
                                         ->columnSpan(2)
-                                        ->label('QC Status'),
+                                        ->label('QC Status')
+                                        ->native(false),
                                 ])
                                 ->columns(9)
                                 ->collapsible()
