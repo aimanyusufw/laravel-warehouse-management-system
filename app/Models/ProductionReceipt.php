@@ -16,6 +16,17 @@ class ProductionReceipt extends Model
         'user_id'
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->receipt_number)) {
+                $model->receipt_number = 'PR-' . date('Ymd') . '-' . str_pad(ProductionReceipt::max('id') + 1, 5, '0', STR_PAD_LEFT);
+            }
+        });
+    }
+
     protected $casts = [
         'date' => 'date',
     ];
