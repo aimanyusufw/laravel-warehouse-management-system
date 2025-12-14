@@ -28,76 +28,107 @@ class SalesOrderResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make([
-                    Forms\Components\TextInput::make('so_number')
-                        ->label('SO Number')
-                        ->readOnly()
-                        ->disabled()
-                        ->default(function ($record) {
-                            return $record
-                                ? $record->so_number
-                                : 'SO Number will be generated automatically by the system.';
-                        }),
-                    Forms\Components\Select::make('shipping_carrier_id')
-                        ->label('Shipping Carrier')
-                        ->placeholder('Select a shipping carrier')
-                        ->helperText('Choose the carrier responsible for delivery.')
-                        ->relationship('carrier', 'name')
-                        ->searchable()
-                        ->preload(),
-                    Forms\Components\Select::make('status')
-                        ->label('Status')
-                        ->options([
-                            'Draft'        => 'Draft',
-                            'Pending Pick' => 'Pending Pick',
-                            'Picked'       => 'Picked',
-                            'Packed'       => 'Packed',
-                            'Shipped'      => 'Shipped',
-                            'Closed'       => 'Closed',
-                            'Canceled'     => 'Canceled',
-                        ])
-                        ->placeholder('Select order status')
-                        ->helperText('Set the current workflow status for this order.')
-                        ->default('Draft')
-                        ->native(false)
-                        ->required(),
-                    Forms\Components\DatePicker::make('order_date')
-                        ->label('Order Date')
-                        ->placeholder('Select order creation date')
-                        ->helperText('Date when this order was created.')
-                        ->native(false)
-                        ->suffixIcon("heroicon-o-calendar")
-                        ->required(),
-                    Forms\Components\TextInput::make('shipping_cost')
-                        ->label('Shipping Cost')
-                        ->placeholder('0.00')
-                        ->helperText('The cost required to ship the order.')
-                        ->mask(RawJs::make('$money($input)'))
-                        ->prefix('IDR')
-                        ->required()
-                        ->dehydrateStateUsing(function ($state) {
-                            if ($state === null || $state === '') {
-                                return 0.0;
-                            }
-                            $clean = preg_replace('/[^0-9\.,]/', '', (string) $state);
-                            $clean = str_replace(',', '.', $clean);
-                            if (substr_count($clean, '.') > 1) {
-                                $parts = explode('.', $clean);
-                                $decimal = array_pop($parts);
-                                $integer = implode('', $parts);
-                                $clean = $integer . '.' . $decimal;
-                            }
-                            if ($clean === '' || $clean === '.') {
-                                return 0.0;
-                            }
-                            return (float) $clean;
-                        }),
-                    Forms\Components\TextInput::make('tracking_number')
-                        ->label('Tracking Number')
-                        ->placeholder('e.g., TRK123456789ID')
-                        ->helperText('Tracking number provided by carrier.')
-                        ->maxLength(255),
-                ])->columns(["sm" => 1])->columnSpan(2),
+                Forms\Components\Grid::make()->schema([
+                    Forms\Components\Section::make([
+                        Forms\Components\TextInput::make('so_number')
+                            ->label('SO Number')
+                            ->readOnly()
+                            ->disabled()
+                            ->helperText("SO Number generated automatically by the system.")
+                            ->default(function ($record) {
+                                return $record
+                                    ? $record->so_number
+                                    : 'SO Number will be generated automatically by the system.';
+                            }),
+                        Forms\Components\Select::make('shipping_carrier_id')
+                            ->label('Shipping Carrier')
+                            ->placeholder('Select a shipping carrier')
+                            ->helperText('Choose the carrier responsible for delivery.')
+                            ->relationship('carrier', 'name')
+                            ->searchable()
+                            ->preload(),
+                        Forms\Components\Select::make('status')
+                            ->label('Status')
+                            ->options([
+                                'Draft'        => 'Draft',
+                                'Pending Pick' => 'Pending Pick',
+                                'Picked'       => 'Picked',
+                                'Packed'       => 'Packed',
+                                'Shipped'      => 'Shipped',
+                                'Closed'       => 'Closed',
+                                'Canceled'     => 'Canceled',
+                            ])
+                            ->placeholder('Select order status')
+                            ->helperText('Set the current workflow status for this order.')
+                            ->default('Draft')
+                            ->native(false)
+                            ->required(),
+                        Forms\Components\DatePicker::make('order_date')
+                            ->label('Order Date')
+                            ->placeholder('Select order creation date')
+                            ->helperText('Date when this order was created.')
+                            ->native(false)
+                            ->suffixIcon("heroicon-o-calendar")
+                            ->required(),
+                        Forms\Components\TextInput::make('shipping_cost')
+                            ->label('Shipping Cost')
+                            ->placeholder('0.00')
+                            ->helperText('The cost required to ship the order.')
+                            ->mask(RawJs::make('$money($input)'))
+                            ->prefix('IDR')
+                            ->required()
+                            ->dehydrateStateUsing(function ($state) {
+                                if ($state === null || $state === '') {
+                                    return 0.0;
+                                }
+                                $clean = preg_replace('/[^0-9\.,]/', '', (string) $state);
+                                $clean = str_replace(',', '.', $clean);
+                                if (substr_count($clean, '.') > 1) {
+                                    $parts = explode('.', $clean);
+                                    $decimal = array_pop($parts);
+                                    $integer = implode('', $parts);
+                                    $clean = $integer . '.' . $decimal;
+                                }
+                                if ($clean === '' || $clean === '.') {
+                                    return 0.0;
+                                }
+                                return (float) $clean;
+                            }),
+                        Forms\Components\TextInput::make('tracking_number')
+                            ->label('Tracking Number')
+                            ->placeholder('e.g., TRK123456789ID')
+                            ->helperText('Tracking number provided by carrier.')
+                            ->maxLength(255),
+                    ])->columns(["sm" => 2])->columnSpan(2),
+                    Forms\Components\Section::make('Order Item Details')
+                        ->description('List all products item of sales order.')
+                        ->schema([
+                            Forms\Components\Repeater::make('details')
+                                ->relationship('details')
+                                ->schema([
+                                    Forms\Components\Select::make('product_id')
+                                        ->label("Product")
+                                        ->relationship('product', 'name')
+                                        ->searchable()
+                                        ->required()
+                                        ->preload()
+                                        ->columnSpanFull(),
+                                    Forms\Components\TextInput::make('quantity_ordered')
+                                        ->numeric()
+                                        ->minValue(1)
+                                        ->required(),
+                                    Forms\Components\TextInput::make('quantity_picked')
+                                        ->numeric()
+                                        ->minValue(1)
+                                        ->required(),
+                                ])
+                                ->columns(2)
+                                ->collapsible()
+                                ->defaultItems(1)
+                                ->createItemButtonLabel('Add New Order Detail')
+                                ->required(),
+                        ]),
+                ])->columns(["sm" => 2])->columnSpan(2),
                 Forms\Components\Grid::make()
                     ->schema([
                         Forms\Components\Section::make('Customer')
